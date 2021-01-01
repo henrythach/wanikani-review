@@ -1,41 +1,10 @@
-import React from "react";
-import { CARD_COLORS, getAnswers, getRadicalImageUrl } from "../helpers";
-import { IStudyItem } from "../types/app";
-import { IWanikaniRadical, IWanikaniSubject } from "../types/api";
-import { KanaInput } from "./KanaInput";
+import React from 'react'
+import { CARD_COLORS, getAnswers, getRadicalImageUrl } from '../helpers'
+import { IStudyItem } from '../types/app'
+import { IWanikaniRadical, IWanikaniSubject } from '../types/api'
+import { KanaInput } from './KanaInput'
 
-export interface IStudyCardProps {
-  studyItem: IStudyItem
-  onAnswered: () => void
-}
-
-export function getDisplay(subject: IWanikaniSubject) {
-  if (subject.characters) {
-    return (
-      <h1
-        style={{
-          color: '#ffffff',
-          fontSize: '54pt',
-          paddingLeft: '0.5em',
-          paddingRight: '0.5em'
-        }}
-      >
-        {subject.characters}
-      </h1>
-    )
-  }
-
-  const radicalUrl = getRadicalImageUrl(subject as IWanikaniRadical)
-  return (
-    <img
-      alt={`Radical for ${subject.meanings.join(', ')}`}
-      src={radicalUrl}
-      style={{ maxHeight: '85px', maxWidth: '85px', margin: '0 auto' }}
-    />
-  )
-}
-
-const StudyCard = ({ studyItem, onAnswered }: IStudyCardProps) => {
+const StudyCard = ({ studyItem, onAnswered, goBack, goForward }: IStudyCardProps) => {
   const possibleAnswers = getAnswers(studyItem)
   const subject = studyItem.subject
 
@@ -73,6 +42,14 @@ const StudyCard = ({ studyItem, onAnswered }: IStudyCardProps) => {
     if (e.key === 'Enter' && correctAnswers.length) {
       onAnswered()
     }
+
+    if (e.key === 'ArrowLeft' && value.trim() === '') {
+      goBack()
+    }
+
+    if (e.key === 'ArrowRight' && value.trim() === '') {
+      goForward()
+    }
   }
 
   React.useEffect(() => {
@@ -82,56 +59,15 @@ const StudyCard = ({ studyItem, onAnswered }: IStudyCardProps) => {
   }, [answers, onAnswered])
 
   return (
-    <div
-      style={{
-        minWidth: '30rem',
-        display: 'flex',
-        flexDirection: 'column',
-        backgroundColor: CARD_COLORS[studyItem.subject_type],
-        textAlign: 'center',
-        border: '1px solid #cccccc',
-        position: 'relative'
-      }}
-    >
+    <div className='StudyCard' style={{ backgroundColor: CARD_COLORS[studyItem.subject_type] }}>
       {correctAnswers.length ? (
-        <div
-          style={{
-            position: 'absolute',
-            right: 0,
-            padding: '0.25em 1em',
-            backgroundColor: 'green',
-            color: '#ffffff',
-            fontSize: '10pt',
-            fontWeight: 'bold'
-          }}
-        >
+        <div className='StudyCard__remaining-counter'>
           {correctAnswers.length} / {possibleAnswers.length}
         </div>
       ) : null}
-      <div
-        style={{
-          height: '150px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center'
-        }}
-      >
-        {getDisplay(subject)}
-      </div>
-      {showAnswer ? (
-        <div style={{ fontSize: '11px', color: '#ffffff' }}>{answers.join(', ')}</div>
-      ) : null}
-      <footer
-        style={{
-          backgroundColor: '#444444',
-          color: '#ffffff',
-          paddingTop: '0.5em',
-          paddingBottom: '0.5em',
-          fontSize: '16pt',
-          fontWeight: 'bold',
-          textTransform: 'uppercase'
-        }}
-      >
+      <div className='StudyCard__display'>{getDisplay(subject)}</div>
+      <div className='StudyCard__correct-answers'>{correctAnswers.join(', ')}</div>
+      <footer className='StudyCard_footer'>
         <span>
           {studyItem.subject_type} {studyItem.study_type}
         </span>
@@ -141,9 +77,43 @@ const StudyCard = ({ studyItem, onAnswered }: IStudyCardProps) => {
         value={value}
         onChange={onChange}
         onKeyUp={onKeyUp}
+        placeholder={showAnswer ? answers.join(', ') : ''}
       />
     </div>
   )
 }
 
 export default StudyCard
+
+interface IStudyCardProps {
+  studyItem: IStudyItem
+  onAnswered: () => void
+  goBack: () => void
+  goForward: () => void
+}
+
+function getDisplay(subject: IWanikaniSubject) {
+  if (subject.characters) {
+    return (
+      <p
+        style={{
+          color: '#ffffff',
+          fontSize: '54pt',
+          paddingLeft: '0.5em',
+          paddingRight: '0.5em'
+        }}
+      >
+        {subject.characters}
+      </p>
+    )
+  }
+
+  const radicalUrl = getRadicalImageUrl(subject as IWanikaniRadical)
+  return (
+    <img
+      alt={`Radical for ${subject.meanings.join(', ')}`}
+      src={radicalUrl}
+      style={{ maxHeight: '85px', maxWidth: '85px', margin: '0 auto' }}
+    />
+  )
+}

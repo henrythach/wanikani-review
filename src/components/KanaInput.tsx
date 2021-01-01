@@ -7,13 +7,15 @@ interface KanaInputProps {
   value: string
   onChange: (value: string) => void
   onKeyUp: (event: React.KeyboardEvent<HTMLInputElement>) => void
+  placeholder: string
 }
 
-export const KanaInput = ({ studyType, value, onChange, onKeyUp }: KanaInputProps) => {
+export const KanaInput = (props: KanaInputProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value
-    const answer = studyType === 'meaning' ? inputValue : toKana(inputValue, { IMEMode: true })
-    onChange(answer)
+    const isMeaning = props.studyType === 'meaning'
+    const answer = isMeaning ? inputValue : toKana(inputValue, { IMEMode: true })
+    props.onChange(answer)
   }
 
   return (
@@ -28,9 +30,10 @@ export const KanaInput = ({ studyType, value, onChange, onKeyUp }: KanaInputProp
         fontWeight: 'bold',
         border: 0
       }}
+      placeholder={props.placeholder}
       onChange={handleChange}
-      onKeyUp={onKeyUp}
-      value={value}
+      onKeyUp={props.onKeyUp}
+      value={props.value}
       spellCheck={false}
       autoCapitalize='off'
       autoComplete='off'

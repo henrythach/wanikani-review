@@ -1,47 +1,92 @@
 .App {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 100rem;
+  margin: 4em auto;
 }
 
-svg.radical * {
-  stroke: #000;
-  stroke-linecap:square;
-  stroke-miterlimit:10;
-  stroke-width:68px;
-  fill: none;
+.Review-List-Container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 5em;
+  width: 100%;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.Review-List {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 0 0.5rem;
+}
+
+.Review-List-Item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25em 0.75em;
+  border-top: 1px solid #eeeeee;
+  min-height: 3rem;
   color: #ffffff;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.Review-List-Item__character {
+  flex: 1;
+  font-size: 1.5em;
+  font-weight: bold;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.Review-List-Item__details {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: flex-end;
+  font-size: 12px;
+  text-align: right;
+}
+
+.StudyCard {
+  min-width: 30rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  border: 1px solid #cccccc;
+  position: relative;
+}
+
+.StudyCard__remaining-counter {
+  position: absolute;
+  right: 0;
+  padding: 0.25em 1em;
+  background-color: green;
+  color: #ffffff;
+  font-size: 10pt;
+  font-weight: bold;
+}
+
+.StudyCard__display {
+  height: 150px;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  padding-top: 1em;
 }
 
-.App-link {
-  color: #61dafb;
+.StudyCard__correct-answers {
+  font-size: 11px;
+  color: #ffffff;
+  margin-bottom: 1em;
+  min-height: 20px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.StudyCard_footer {
+  background-color: #444444;
+  color: #ffffff;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  font-size: 16pt;
+  font-weight: bold;
+  text-transform: uppercase;
 }

@@ -1,58 +1,75 @@
-import React from "react";
-import "./App.css";
-import { db, IReviewStatisticItem } from "./WanikaniDatabase";
-import { ReviewList } from "./components/ReviewList";
-import { IStudyItem } from "./types/app";
-import { createStudyItems } from "./helpers";
-import StudyCard from "./components/StudyCard";
+import React from 'react'
+import './App.css'
+import { db, IReviewStatisticItem } from './WanikaniDatabase'
+import { ReviewList } from './components/ReviewList'
+import { IStudyItem } from './types/app'
+import { createStudyItems } from './helpers'
+import StudyCard from './components/StudyCard'
+
+const NUMBER_REVIEW_ITEMS = 25
 
 function App() {
   const [studyIndex, setStudyIndex] = React.useState(0)
   const [studyItems, setStudyItems] = React.useState<IStudyItem[]>([])
-  const [reviewItems, setReviewItems] = React.useState<IReviewStatisticItem[]>([])
+  const [byReading, setByReading] = React.useState<IReviewStatisticItem[]>([])
+  const [byMeaning, setByMeaning] = React.useState<IReviewStatisticItem[]>([])
+  const [byRecent, setByRecent] = React.useState<IReviewStatisticItem[]>([])
+  const [byPercentage, setByPercentage] = React.useState<IReviewStatisticItem[]>([])
 
   React.useEffect(() => {
-    const doThing = async () => {
+    ;(async () => {
       await db.sync()
 
-      const reviewItems = await db.getReviewsByReadingStreak(20)
-      setReviewItems(reviewItems)
-      setStudyItems(createStudyItems(reviewItems))
-    }
-
-    doThing().then((_) => {})
+      setByReading(await db.getReviewsByReadingStreak(NUMBER_REVIEW_ITEMS))
+      setByMeaning(await db.getReviewsByMeaningStreak(NUMBER_REVIEW_ITEMS))
+      setByRecent(await db.getReviewsByMostRecent(NUMBER_REVIEW_ITEMS))
+      setByPercentage(await db.getReviewsByPercentageCorrect(NUMBER_REVIEW_ITEMS))
+    })()
   }, [])
 
-  if (reviewItems.length === 0 || studyItems.length === 0) {
-    return <p>Loading...</p>
-  }
-
-  const studyItem = studyItems[studyIndex % studyItems.length]
   const onAnswered = () => {
     setStudyIndex(studyIndex + 1)
   }
 
+  const goBack = () => {
+    setStudyIndex(Math.max(0, studyIndex - 1))
+  }
+
+  const goForward = () => {
+    setStudyIndex(studyIndex + 1)
+  }
+
+  const onSelect = (items: IReviewStatisticItem[]) => {
+    setStudyItems(createStudyItems(items))
+    setStudyIndex(0)
+  }
+
+  if (
+    byReading.length === 0 ||
+    byMeaning.length === 0 ||
+    byRecent.length === 0 ||
+    byPercentage.length === 0
+  ) {
+    return <p>Loading...</p>
+  }
+
+  const studyItem = studyItems[studyIndex % studyItems.length]
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: '2em',
-        maxWidth: '50rem',
-        margin: '2em auto'
-      }}
-    >
-      <button onClick={() => setStudyIndex(Math.max(0, studyIndex - 1))}>Previous</button>
-      <button onClick={() => setStudyIndex(studyIndex + 1)}>Next</button>
-      <StudyCard
-        key={studyItem.study_type + studyItem.subject.slug}
-        studyItem={studyItem}
-        onAnswered={onAnswered}
-      />
-      <div style={{ marginTop: '2em', width: '100%' }}>
-        <ReviewList items={reviewItems} />
+    <div className='App'>
+      {studyItem ? (
+        <StudyCard
+          key={studyItem.study_type + studyItem.subject.slug}
+          studyItem={studyItem}
+          onAnswered={onAnswered}
+          goBack={goBack}
+          goForward={goForward}
+        />
+      ) : <h2>[[ Select a list to review ]]</h2>}
+      <div className='Review-List-Container'>
+        <ReviewList onSelect={onSelect} title='Low reading streak' items={byReading} />
+        <ReviewList onSelect={onSelect} title='Low meaning streak' items={byMeaning} />
+        <ReviewList onSelect={onSelect} title='Recent items' items={byRecent} />
+        <ReviewList onSelect={onSelect} title='Correct percentage' items={byPercentage} />
       </div>
     </div>
   )

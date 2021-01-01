@@ -74,7 +74,6 @@ export class WanikaniDatabase extends Dexie {
     return await this.joinWithSubject(
       await this.review_statistics
         .orderBy('data.reading_current_streak')
-        .reverse()
         .limit(limit)
         .toArray()
     )

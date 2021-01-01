@@ -1,57 +1,43 @@
-import { IWanikaniKanji } from '../types/api'
 import React from 'react'
 import { IReviewStatisticItem } from '../WanikaniDatabase'
-import { CARD_COLORS } from '../helpers'
+import { CARD_COLORS, getItemPrimaryMeaning, getItemPrimaryReading } from '../helpers'
 
-export const ReviewList = ({ items = [] }: { items: IReviewStatisticItem[] }) => (
-  <>
-    {items.map((item) => (
+export const ReviewList = (props: {
+  title: string
+  onSelect: (items: IReviewStatisticItem[]) => void
+  items: IReviewStatisticItem[]
+}) => (
+  <div className='Review-List'>
+    <h3>{props.title}</h3>
+    <button
+      style={{
+        padding: '0.5em 2em',
+        cursor: 'pointer',
+        marginBottom: '1em',
+        backgroundColor: '#dddddd',
+        color: '#444444',
+        fontWeight: 'bolder',
+        border: 0,
+        borderRadius: '5pt',
+        fontSize: '12pt',
+        boxShadow: '-0px 3px #aaaaaa'
+      }}
+      onClick={() => props.onSelect(props.items)}
+    >
+      Select
+    </button>
+    {props.items.map((item) => (
       <div
         key={item.subject_id}
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          backgroundColor: CARD_COLORS[item.subject_type],
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: '100%',
-          paddingTop: '0.25em',
-          paddingBottom: '0.25em',
-          paddingLeft: '0.75em',
-          paddingRight: '0.75em',
-          borderTop: '1px solid #eeeeee',
-          color: '#ffffff'
-        }}
+        className='Review-List-Item'
+        style={{ backgroundColor: CARD_COLORS[item.subject_type] }}
       >
-        <span style={{ flex: 1, fontSize: '1.5em', fontWeight: 'bold' }}>
-          {item.subject?.characters}
-        </span>
-        <span style={{ flex: 1, textAlign: 'center' }}>{item.percentage_correct}%</span>
-        <div
-          style={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            textAlign: 'right'
-          }}
-        >
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div>
-              {item.subject?.meanings
-                ?.filter((m) => m.primary)
-                ?.map((m) => m.meaning)
-                ?.join(', ')}
-            </div>
-            <div>
-              {(item?.subject as IWanikaniKanji)?.readings
-                ?.filter((r) => r.primary)
-                ?.map((r) => r.reading)
-                ?.join(', ')}
-            </div>
-          </div>
+        <span className='Review-List-Item__character'>{item.subject?.characters}</span>
+        <div className='Review-List-Item__details'>
+          <div>{getItemPrimaryMeaning(item)}</div>
+          <div>{getItemPrimaryReading(item)}</div>
         </div>
       </div>
     ))}
-  </>
+  </div>
 )
