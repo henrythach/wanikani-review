@@ -2,6 +2,14 @@
   text-align: center;
 }
 
+svg.radical * {
+  stroke: #000;
+  stroke-linecap:square;
+  stroke-miterlimit:10;
+  stroke-width:68px;
+  fill: none;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
