@@ -77,7 +77,13 @@ const StudyCard = ({ studyItem, onAnswered, goBack, goForward }: IStudyCardProps
         value={value}
         onChange={onChange}
         onKeyUp={onKeyUp}
-        placeholder={showAnswer ? answers.join(', ') : studyItem.study_type === 'meaning' ? 'MEANING' : 'ひりがな'}
+        placeholder={
+          showAnswer
+            ? answers.join(', ')
+            : studyItem.study_type === 'meaning'
+            ? 'MEANING'
+            : 'ひりがな'
+        }
       />
     </div>
   )
@@ -95,16 +101,20 @@ interface IStudyCardProps {
 function getDisplay(subject: IWanikaniSubject) {
   if (subject.characters) {
     return (
-      <p
+      <a
         style={{
           color: '#ffffff',
           fontSize: '54pt',
           paddingLeft: '0.5em',
-          paddingRight: '0.5em'
+          paddingRight: '0.5em',
+          textDecoration: 'none'
         }}
+        href={subject.document_url}
+        target='_blank'
+        rel='noreferrer'
       >
         {subject.characters}
-      </p>
+      </a>
     )
   }
 
