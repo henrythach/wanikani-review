@@ -3,10 +3,10 @@ import './App.css'
 import { db, IReviewStatisticItem } from './WanikaniDatabase'
 import { ReviewList } from './components/ReviewList'
 import { IStudyItem } from './types/app'
-import { createStudyItems } from './helpers'
+import { createStudyItems, shuffleArray } from "./helpers";
 import StudyCard from './components/StudyCard'
 
-const NUMBER_REVIEW_ITEMS = 25
+const NUMBER_REVIEW_ITEMS = 20
 
 function App() {
   const [studyIndex, setStudyIndex] = React.useState(0)
@@ -40,7 +40,7 @@ function App() {
   }
 
   const onSelect = (items: IReviewStatisticItem[]) => {
-    setStudyItems(createStudyItems(items))
+    setStudyItems(shuffleArray(createStudyItems(items)))
     setStudyIndex(0)
   }
 
@@ -58,18 +58,20 @@ function App() {
     <div className='App'>
       {studyItem ? (
         <StudyCard
-          key={studyItem.study_type + studyItem.subject.slug}
+          key={studyItem.study_type + studyItem.subject.slug + studyIndex}
           studyItem={studyItem}
           onAnswered={onAnswered}
           goBack={goBack}
           goForward={goForward}
         />
-      ) : <h2>[[ Select a list to review ]]</h2>}
+      ) : (
+        <h2>[[ Select a list below to review those items ]]</h2>
+      )}
       <div className='Review-List-Container'>
-        <ReviewList onSelect={onSelect} title='Low reading streak' items={byReading} />
-        <ReviewList onSelect={onSelect} title='Low meaning streak' items={byMeaning} />
-        <ReviewList onSelect={onSelect} title='Recent items' items={byRecent} />
-        <ReviewList onSelect={onSelect} title='Correct percentage' items={byPercentage} />
+        <ReviewList onSelect={onSelect} items={byReading} title='Low reading streak' />
+        <ReviewList onSelect={onSelect} items={byMeaning} title='Low meaning streak' />
+        <ReviewList onSelect={onSelect} items={byRecent} title='Recent items' />
+        <ReviewList onSelect={onSelect} items={byPercentage} title='Correct percentage' />
       </div>
     </div>
   )

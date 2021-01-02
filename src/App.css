@@ -3,8 +3,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: 100rem;
-  margin: 4em auto;
+  margin: 2em;
+  padding-top: 2em;
 }
 
 .Review-List-Container {
@@ -48,7 +48,7 @@
 }
 
 .StudyCard {
-  min-width: 30rem;
+  min-width: 40rem;
   display: flex;
   flex-direction: column;
   text-align: center;

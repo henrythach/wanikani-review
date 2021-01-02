@@ -77,7 +77,7 @@ const StudyCard = ({ studyItem, onAnswered, goBack, goForward }: IStudyCardProps
         value={value}
         onChange={onChange}
         onKeyUp={onKeyUp}
-        placeholder={showAnswer ? answers.join(', ') : ''}
+        placeholder={showAnswer ? answers.join(', ') : studyItem.study_type === 'meaning' ? 'MEANING' : 'ひりがな'}
       />
     </div>
   )

@@ -31,6 +31,7 @@ export const ReviewList = (props: {
         key={item.subject_id}
         className='Review-List-Item'
         style={{ backgroundColor: CARD_COLORS[item.subject_type] }}
+        onClick={() => props.onSelect([item])}
       >
         <span className='Review-List-Item__character'>{item.subject?.characters}</span>
         <div className='Review-List-Item__details'>
