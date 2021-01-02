@@ -3,18 +3,24 @@ import './App.css'
 import { db, IReviewStatisticItem } from './WanikaniDatabase'
 import { ReviewList } from './components/ReviewList'
 import { IStudyItem } from './types/app'
-import { createStudyItems, shuffleArray } from "./helpers";
+import { createStudyItems, shuffleArray } from './helpers'
 import StudyCard from './components/StudyCard'
+import SubjectCheckbox from './components/SubjectCheckbox'
+import { IWanikaniReviewStatistic } from './types/api'
 
-const NUMBER_REVIEW_ITEMS = 20
+const NUMBER_REVIEW_ITEMS = 200
 
 function App() {
+  const [reviewItems, setReviewItems] = React.useState<IWanikaniReviewStatistic[]>([])
   const [studyIndex, setStudyIndex] = React.useState(0)
   const [studyItems, setStudyItems] = React.useState<IStudyItem[]>([])
   const [byReading, setByReading] = React.useState<IReviewStatisticItem[]>([])
   const [byMeaning, setByMeaning] = React.useState<IReviewStatisticItem[]>([])
   const [byRecent, setByRecent] = React.useState<IReviewStatisticItem[]>([])
   const [byPercentage, setByPercentage] = React.useState<IReviewStatisticItem[]>([])
+
+  const [isMeaning, setIsMeaning] = React.useState(true)
+  const [isReading, setIsReading] = React.useState(true)
 
   React.useEffect(() => {
     ;(async () => {
@@ -26,6 +32,22 @@ function App() {
       setByPercentage(await db.getReviewsByPercentageCorrect(NUMBER_REVIEW_ITEMS))
     })()
   }, [])
+
+  React.useEffect(() => {
+    setStudyItems(
+      createStudyItems(reviewItems).filter((studyItem) => {
+        if (!(isReading || isMeaning)) {
+          return true
+        }
+
+        return (
+          (isReading ? studyItem.study_type === 'reading' : false) ||
+          (isMeaning ? studyItem.study_type === 'meaning' : false)
+        )
+      })
+    )
+    setStudyIndex(0)
+  }, [isReading, isMeaning, reviewItems])
 
   const onAnswered = () => {
     setStudyIndex(studyIndex + 1)
@@ -39,8 +61,9 @@ function App() {
     setStudyIndex(studyIndex + 1)
   }
 
-  const onSelect = (items: IReviewStatisticItem[]) => {
-    setStudyItems(shuffleArray(createStudyItems(items)))
+  const onSelect = (reviewItems: IReviewStatisticItem[]) => {
+    setReviewItems(reviewItems)
+    setStudyItems(shuffleArray(createStudyItems(reviewItems)))
     setStudyIndex(0)
   }
 
@@ -56,6 +79,14 @@ function App() {
   const studyItem = studyItems[studyIndex % studyItems.length]
   return (
     <div className='App'>
+      <nav style={{ display: 'flex', flexDirection: 'row', marginBottom: '1em' }}>
+        <SubjectCheckbox checked={isMeaning} onChange={() => setIsMeaning(!isMeaning)}>
+          Meaning
+        </SubjectCheckbox>
+        <SubjectCheckbox checked={isReading} onChange={() => setIsReading(!isReading)}>
+          Reading
+        </SubjectCheckbox>
+      </nav>
       {studyItem ? (
         <StudyCard
           key={studyItem.study_type + studyItem.subject.slug + studyIndex}

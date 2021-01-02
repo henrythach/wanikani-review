@@ -68,9 +68,7 @@ const StudyCard = ({ studyItem, onAnswered, goBack, goForward }: IStudyCardProps
       <div className='StudyCard__display'>{getDisplay(subject)}</div>
       <div className='StudyCard__correct-answers'>{correctAnswers.join(', ')}</div>
       <footer className='StudyCard_footer'>
-        <span>
-          {studyItem.subject_type} {studyItem.study_type}
-        </span>
+        {studyItem.subject_type} <strong>{studyItem.study_type}</strong>
       </footer>
       <KanaInput
         studyType={studyItem.study_type}
