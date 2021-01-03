@@ -63,19 +63,11 @@ export function getAnswers(studyItem: IStudyItem) {
 }
 
 export function getItemPrimaryMeaning(item: IReviewStatisticItem) {
-  return (
-    item.subject?.meanings
-      ?.filter((m) => m.primary)
-      ?.map((m) => m.meaning)
-      ?.join(', ') ?? ''
-  )
+  return item.subject?.meanings?.find((m) => m.primary)?.meaning ?? ''
 }
 
 export function getItemPrimaryReading(item: IReviewStatisticItem) {
-  return (item?.subject as IWanikaniKanji)?.readings
-    ?.filter((r) => r.primary)
-    ?.map((r) => r.reading)
-    ?.join(', ')
+  return (item?.subject as IWanikaniKanji)?.readings?.find((r) => r.primary)?.reading ?? ''
 }
 
 export function shuffleArray<T>(array: T[]) {

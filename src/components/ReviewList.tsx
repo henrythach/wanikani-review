@@ -55,14 +55,14 @@ export const ReviewList = (props: {
           marginBottom: '1em'
         }}
       >
+        <SubjectCheckbox checked={isRadical} onChange={() => setIsRadical(!isRadical)}>
+          <span style={{ fontWeight: 'bold', color: CARD_COLORS['radical'] }}>部首</span>
+        </SubjectCheckbox>
         <SubjectCheckbox checked={isKanji} onChange={() => setIsKanji(!isKanji)}>
-          Kanji
+          <span style={{ fontWeight: 'bold', color: CARD_COLORS['kanji'] }}>漢字</span>
         </SubjectCheckbox>
         <SubjectCheckbox checked={isVocabulary} onChange={() => setIsVocabulary(!isVocabulary)}>
-          Vocabulary
-        </SubjectCheckbox>
-        <SubjectCheckbox checked={isRadical} onChange={() => setIsRadical(!isRadical)}>
-          Radical
+          <span style={{ fontWeight: 'bold', color: CARD_COLORS['vocabulary'] }}>単語</span>
         </SubjectCheckbox>
         <input
           type='number'
@@ -80,7 +80,6 @@ export const ReviewList = (props: {
           key={item.subject_id}
           className='Review-List-Item'
           style={{ backgroundColor: CARD_COLORS[item.subject_type] }}
-          onClick={() => props.onSelect([item])}
         >
           <span className='Review-List-Item__character'>{item.subject?.characters}</span>
           <div className='Review-List-Item__details'>

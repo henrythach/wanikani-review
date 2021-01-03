@@ -35,16 +35,18 @@ function App() {
 
   React.useEffect(() => {
     setStudyItems(
-      createStudyItems(reviewItems).filter((studyItem) => {
-        if (!(isReading || isMeaning)) {
-          return true
-        }
+      shuffleArray(
+        createStudyItems(reviewItems).filter((studyItem) => {
+          if (!(isReading || isMeaning)) {
+            return true
+          }
 
-        return (
-          (isReading ? studyItem.study_type === 'reading' : false) ||
-          (isMeaning ? studyItem.study_type === 'meaning' : false)
-        )
-      })
+          return (
+            (isReading ? studyItem.study_type === 'reading' : false) ||
+            (isMeaning ? studyItem.study_type === 'meaning' : false)
+          )
+        })
+      )
     )
     setStudyIndex(0)
   }, [isReading, isMeaning, reviewItems])
@@ -63,8 +65,6 @@ function App() {
 
   const onSelect = (reviewItems: IReviewStatisticItem[]) => {
     setReviewItems(reviewItems)
-    setStudyItems(shuffleArray(createStudyItems(reviewItems)))
-    setStudyIndex(0)
   }
 
   if (
