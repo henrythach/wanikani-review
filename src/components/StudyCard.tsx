@@ -67,7 +67,13 @@ const StudyCard = ({ studyItem, onAnswered, goBack, goForward }: IStudyCardProps
       ) : null}
       <div className='StudyCard__display'>{getDisplay(subject)}</div>
       <div className='StudyCard__correct-answers'>{correctAnswers.join(', ')}</div>
-      <footer className='StudyCard_footer'>
+      <footer
+        className='StudyCard_footer'
+        style={{
+          backgroundColor: studyItem.study_type === 'reading' ? '#444444' : '#eeeeee',
+          color: studyItem.study_type === 'reading' ? '#eeeeee' : '#444444'
+        }}
+      >
         {studyItem.subject_type} <strong>{studyItem.study_type}</strong>
       </footer>
       <KanaInput
@@ -80,7 +86,7 @@ const StudyCard = ({ studyItem, onAnswered, goBack, goForward }: IStudyCardProps
             ? answers.join(', ')
             : studyItem.study_type === 'meaning'
             ? 'MEANING'
-            : 'ひりがな'
+            : 'ひらがな'
         }
       />
     </div>

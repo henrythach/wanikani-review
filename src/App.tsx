@@ -3,21 +3,21 @@ import './App.css'
 import { db, IReviewStatisticItem } from './WanikaniDatabase'
 import { ReviewList } from './components/ReviewList'
 import { IStudyItem } from './types/app'
-import { createStudyItems, shuffleArray } from './helpers'
+import { CARD_COLORS, createStudyItems, shuffleArray } from './helpers'
 import StudyCard from './components/StudyCard'
 import SubjectCheckbox from './components/SubjectCheckbox'
-import { IWanikaniReviewStatistic } from './types/api'
 
 const NUMBER_REVIEW_ITEMS = 200
 
 function App() {
-  const [reviewItems, setReviewItems] = React.useState<IWanikaniReviewStatistic[]>([])
+  const [reviewItems, setReviewItems] = React.useState<IReviewStatisticItem[]>([])
   const [studyIndex, setStudyIndex] = React.useState(0)
   const [studyItems, setStudyItems] = React.useState<IStudyItem[]>([])
   const [byReading, setByReading] = React.useState<IReviewStatisticItem[]>([])
   const [byMeaning, setByMeaning] = React.useState<IReviewStatisticItem[]>([])
   const [byRecent, setByRecent] = React.useState<IReviewStatisticItem[]>([])
   const [byPercentage, setByPercentage] = React.useState<IReviewStatisticItem[]>([])
+  const [byUpdated, setByUpdated] = React.useState<IReviewStatisticItem[]>([])
 
   const [isMeaning, setIsMeaning] = React.useState(true)
   const [isReading, setIsReading] = React.useState(true)
@@ -30,6 +30,7 @@ function App() {
       setByMeaning(await db.getReviewsByMeaningStreak(NUMBER_REVIEW_ITEMS))
       setByRecent(await db.getReviewsByMostRecent(NUMBER_REVIEW_ITEMS))
       setByPercentage(await db.getReviewsByPercentageCorrect(NUMBER_REVIEW_ITEMS))
+      setByUpdated(await db.getReviewByUpdated(NUMBER_REVIEW_ITEMS))
     })()
   }, [])
 
@@ -98,11 +99,28 @@ function App() {
       ) : (
         <h2>[[ Select a list below to review those items ]]</h2>
       )}
+      <div style={{ marginTop: '1em', lineHeight: '2em' }}>
+        {reviewItems.map((reviewItem) => (
+          <span
+            style={{
+              color: '#ffffff',
+              backgroundColor: CARD_COLORS[reviewItem.subject_type],
+              padding: '0 0.5em',
+              margin: '0.15em',
+              borderRadius: '0.25em',
+              display: 'inline-block'
+            }}
+          >
+            {reviewItem.subject?.characters}
+          </span>
+        ))}
+      </div>
       <div className='Review-List-Container'>
         <ReviewList onSelect={onSelect} items={byReading} title='Low reading streak' />
         <ReviewList onSelect={onSelect} items={byMeaning} title='Low meaning streak' />
         <ReviewList onSelect={onSelect} items={byRecent} title='Recent items' />
         <ReviewList onSelect={onSelect} items={byPercentage} title='Correct percentage' />
+        <ReviewList onSelect={onSelect} items={byUpdated} title='By updated' />
       </div>
     </div>
   )

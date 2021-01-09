@@ -52,30 +52,33 @@ export class WanikaniDatabase extends Dexie {
     await this.syncReviewStatistics()
   }
 
-  async getReviewsByPercentageCorrect(limit: number = 25) {
+  async getReviewsByPercentageCorrect(limit: number = 10) {
     return await this.joinWithSubject(
       await this.review_statistics.orderBy('data.percentage_correct').limit(limit).toArray()
     )
   }
 
-  async getReviewsByMostRecent(limit: number = 25) {
+  async getReviewsByMostRecent(limit: number = 10) {
     return await this.joinWithSubject(
       await this.review_statistics.orderBy('data.created_at').reverse().limit(limit).toArray()
     )
   }
 
-  async getReviewsByMeaningStreak(limit: number = 25) {
+  async getReviewsByMeaningStreak(limit: number = 10) {
     return await this.joinWithSubject(
       await this.review_statistics.orderBy('data.meaning_current_streak').limit(limit).toArray()
     )
   }
 
-  async getReviewsByReadingStreak(limit: number = 25) {
+  async getReviewsByReadingStreak(limit: number = 10) {
     return await this.joinWithSubject(
-      await this.review_statistics
-        .orderBy('data.reading_current_streak')
-        .limit(limit)
-        .toArray()
+      await this.review_statistics.orderBy('data.reading_current_streak').limit(limit).toArray()
+    )
+  }
+
+  async getReviewByUpdated(limit: number = 10) {
+    return await this.joinWithSubject(
+      await this.review_statistics.orderBy('data_updated_at').reverse().limit(limit).toArray()
     )
   }
 

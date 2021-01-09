@@ -18,6 +18,9 @@ class Api {
     const results = await this.instance.get<T>(url, {
       headers: {
         'If-Modified-Since': lastUpdated?.toUTCString()
+      },
+      params: {
+        'updated_after': lastUpdated?.toISOString()
       }
     })
     return results.data
