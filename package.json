@@ -48,6 +48,7 @@
     ]
   },
   "devDependencies": {
+    "@types/dotenv": "^8.2.0",
     "@types/qs": "6.9.5",
     "@types/react-table": "7.0.26",
     "@types/wanakana": "4.0.0",

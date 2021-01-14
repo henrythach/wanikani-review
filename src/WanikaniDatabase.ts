@@ -10,7 +10,7 @@ import {
 } from './types/api'
 import Api from './Api'
 
-const { WANIKANI_API_TOKEN = '' } = process.env
+const WANIKANI_API_TOKEN = process.env.REACT_APP_WANIKANI_APP_TOKEN || ''
 
 export interface IReviewStatisticItem extends IWanikaniReviewStatistic {
   subject?: IWanikaniRadical | IWanikaniKanji | IWanikaniVocabulary
